@@ -15,6 +15,9 @@ class Author(models.Model):
     last_name = models.CharField(max_length=250)
     years = models.IntegerField(blank=True, null=True)
 
+    def __str__(self):
+        return self.first_name + self.last_name
+
 
 class Book(models.Model):
     name = models.CharField(max_length=250)
@@ -31,6 +34,3 @@ class Book(models.Model):
         verbose_name_plural = "kitaplar"
         # db_table = 'book_test'
         # ordering
-
-
-

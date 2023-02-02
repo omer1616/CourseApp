@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<table id="table_id" class="display">
+    <thead>
+        <tr>
+            <th>Kitap Adı</th>
+            <th>Kategori</th>
+            <th>Kitap Yazar Adı</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for book in books %}
+        <tr>
+            {% if book.name  != "Demirciler Çarşısı Cinayeti" %}
+            <td>{{ book.name }}</td>
+            <td>{{ book.category.name }}</td>
+            {% for authour in book.author.all %}
+            <td> {{ authour.first_name }} </td>
+
+                {%endfor%}
+          {% endif %}
+
+
+        </tr>
+            {% endfor %}
+    </tbody>
+</table>
+<div>
+    sdfdf
+</div>
+</body>
+</html>

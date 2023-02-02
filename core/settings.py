@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'user',
     'books',
+    'get_post',
 ]
 
 MIDDLEWARE = [

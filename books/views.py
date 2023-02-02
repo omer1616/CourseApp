@@ -1,22 +1,23 @@
 from django.shortcuts import render
-from django.http import HttpResponse,  JsonResponse
+from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
+from .models import Book, Author
+
 
 def home(request):
     data = f"Merhaba burası home sayfası"
+
     context = {
         'data': data
     }
     return render(request, 'index.html', context=context)
 
+
 def books(request):
-    data = f"Merhaba burası boks sayfası" 
-    return HttpResponse(data)
-
-
-
-
-
-
-
+    books = Book.objects.all()
+    x = False
+    context = {'books': books,
+               'x': x
+               }
+    return render(request, 'books.html', context=context)
