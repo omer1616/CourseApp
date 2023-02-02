@@ -1,0 +1,139 @@
+
+
+from blog.models import Blog
+
+#Model oluşturmak için kullanılır.
+
+b = Blog(name='1. Blog', tagline='All the latest Beatles news.')
+b.save()
+
+# 2 Model ürün için kullanılır
+
+Blog.objects.create(name='Two Blog')
+
+#model değiştirmek için
+
+b.name = 'değişen blog'
+b.save()
+
+#veriyi filtreleme
+
+Blog.objects.filter()
+
+#verinin hepsini almak için
+
+
+Blog.objects.all()
+
+
+#verinin bir tane almak almak için
+
+Blog.objects.get(id=1)
+blog, created = Blog.objects.get_or_create(id=1)
+blog, created = Blog.objects.get_or_create(name=blog,  defaults={diğer alanlar})
+blog, created = Blog.objects.update_or_create(name=blog,  defaults={diğer alanlar})
+Blog.objects.get_or_404(id=1)
+
+
+#verinin ilkini almak için
+Blog.objects.first()
+
+#verinin sonuncusunu almak için
+Blog.objects.last()
+
+
+#verinin güncelleme
+Blog.objects.filter(name='blog').update(name='update-blog')
+blog, created = Blog.objects.update_or_create(name=blog,  defaults={diğer alanlar})
+
+# execute olanlar olmayanları getirir
+
+Blog.objects.execute(id=1)
+
+
+#Field Lookups(Arama alanları)
+
+Field Lookups'lar
+iki tane alt çizgi şeklinde kullanılır
+'gt' veri tabanında büyük olanları getirmek için
+Blog.objects.update_or_create(stock_count__gt)
+
+'gte' veri tabanında büyük eşit olanları getirmek için
+Blog.objects.update_or_create(stock_count__gte)
+
+'lt' veri tabanında küçün olanları getirmek için
+Blog.objects.update_or_create(stock_count__lt)
+
+'lte' veri tabanında küçük eşit olanları getirmek için
+Blog.objects.update_or_create(stock_count__lte)
+
+
+'exact' veri tabanında birebir aynı olanları getirir büyük küçük duyarlılığı vardır
+Blog.objects.update_or_create(stock_count__exact)
+
+
+
+'iexact' veri tabanında birebir aynı olanları getirir büyük küçük duyarlılığı yoktur
+Blog.objects.update_or_create(stock_count__iexact)
+
+'startswith' veri tabanında belli bir kelime ile başlayanları getirir
+Blog.objects.update_or_create(stock_count__startswith)
+
+'endswith' veri tabanında belli bir kelime ile bitenlerigetirir
+Blog.objects.update_or_create(stock_count__ensdwith)
+
+'contains' veri tabanında yerine bakılmaksızın içereni getirir
+Blog.objects.update_or_create(stock_count__contains)
+
+
+'icontains' veri tabanında yerine ve büyük küçük harfe  bakılmaksızın içereni getirir
+Blog.objects.update_or_create(stock_count__contains)
+
+
+'range' veri tabanında yerine bakılmaksızın içereni getirir
+Blog.objects.update_or_create(stock_count__range(1,100))
+
+
+'in' veri tabanında yerine bakılmaksızın içereni getirir
+Blog.objects.update_or_create(stock_count__in)
+
+
+'is_null' veri tabanında  bağlı olduğu row'un dolu ve bos olma durumunu sorgular 'True' veya 'False' değerlerini alır
+Blog.objects.update_or_create(stock_count__is_null)
+
+Q nesnesi
+
+filter drumlarında forgulama yaparken and olarak yapar Q nesn
+from django.db.models import Q
+
+books = Books.objects.filter(Q(stock_count=4), | Q(is_active=True))
+products = Books.objects.filter(
+    Q(price__gte=50) & Q(stock_count__gt=0)
+)
+
+"exist"  sorgu setinde kayıt olup olmadığını kontrol etmek için kullanılıır
+
+Books.objects.get(id=1).exists()
+eğer kayıt yoksa False döner
+varsa True
+
+'count' sorgu setindeki nesne sayısını alabiliriz
+
+Books.objects.count()
+sayı döner veri tabanında ne kadar varsa kayıt
+
+eğer ürünleri all() ile çekiyorsak ikinci bir count() sorgusu atmak performans açısından olumlu değil
+çünkü ikinci bir veritabanı sorgusu atılıyor
+
+#values_list() bu method  istediğimiz alanları çekmek için kullanılır
+
+books =  Book.objects.values_list('name')
+books =  Book.objects.values_list('name',  flat=True)
+dersek direkt liste içinde string döndürür
+
+#defer() bu method  istediğimiz alanları hariç tutmak için kullanılır
+
+books =  Book.objects.defer('name')
+
+
+
