@@ -258,11 +258,68 @@ a = Author.objects.count()
 a
 3
 ```
+## Field Lookups
 
+**Sorgulamalar fonksiyon içinde `__` iki alt çizgi şeklinde yapılır**<br/><br/>
+*`exact` veri tabanında birebir aynı olanları getirir büyük küçük duyarlılığı vardır*
 
+```pycon
+Books.objects.filter(price__exact=100)
+```
+*`iexact` veri tabanında birebir aynı olanları getirir büyük küçük duyarlılığı yoktur*
 
+```pycon
+Books.objects.filter(name__iexact="İnce Memed")
+```
+*`contains` veri tabanında yerine bakılmaksızın içereni getirir*
 
+```pycon
+Blog.objects.filter(name__contains="Yaşar")
+```
+*`icontains` veri tabanında yerine bakılmaksızın içereni getirir büyük küçük duyarlılığı yoktur*
 
+```pycon
+Blog.objects.filter(name__icontains="Yaşar")
+```
+*`in` veri tabanında bir dizi içerisinde içerenleri getirir*
+
+```pycon
+a = Author.objects.filter(id__in=[1,2,3,4])
+a
+<QuerySet [<Author: Yaşar Kemal>, <Author: Orhan Kemal>, <Author: Şeyma Subaşı>]>
+```
+*`gt`  veri tabanında büyük olanları getirmek için*
+
+```pycon
+Blog.objects.update_or_create(price__gte=10)
+```
+*`gte`  veri tabanında büyük eşit olanları getirmek için*
+
+```pycon
+Blog.objects.filter(price__gte=10)
+```
+*`lt`  veri tabanında küçük olanları getirmek için*
+
+```pycon
+Blog.objects.update_or_create(price__lt=10)
+```
+*`gt`  veri tabanında küçük eşit olanları getirmek için*
+
+```pycon
+Blog.objects.update_or_create(price_lte=10)
+```
+*`startswith`  veri tabanında ile başlayanları*
+
+```pycon
+Blog.objects.filter(description_startswith="bu roman")
+```
+*`endswith`  veri tabanında ile bitenleri*
+
+```pycon
+Blog.objects.filter(description_endswith="bu roman")
+```
+
+## Q Nesnesi
 
 
 
