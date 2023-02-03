@@ -215,6 +215,50 @@ book = Book.objects.exclute(is_active=False)
 ```pycon
 book = Book.objects.filter(is_active=True).order_by('created_date')
 ```
+`values()` bu metod nesnelerimizi sözlüğe dönüştürmemizi sağlar 
+
+```pycon
+category =  Category.objects.filter(name="Roman").values()
+category
+<QuerySet [{'id': 1, 'name': 'Roman'}]>
+
+```
+`values_list()` bu metod nesnelerimizi sözlük yerine Tuple olarak dönüştürmemizi sağlar 
+
+```pycon
+category =  Category.objects.values_list('id')
+category
+<QuerySet [(1,), (2,)]>
+category =  Category.objects.values_list('id',flat=True)
+category
+<QuerySet [1, 2]>
+```
+`first()` bu metod ilk nesneyi döndürür 
+
+```pycon
+category = Category.objects.first()
+```
+`last()` bu metod son nesneyi döndürür 
+
+```pycon
+category = Category.objects.last()
+```
+`exists()` bu metod kontrol eder True veya False döndürür 
+
+```pycon
+category = Category.objects.filter(name="Roman").exists()
+category
+True
+```
+
+`count()` bu metod adet döndürür 
+
+```pycon
+a = Author.objects.count()
+a
+3
+```
+
 
 
 
