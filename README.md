@@ -89,9 +89,8 @@ class Category(models.Model):
 
   
 class Author(models.Model):
-    first_name = models.CharField(max_length=250)
-    last_name = models.CharField(max_length=250)
-    years = models.IntegerField(blank=True, null=True)
+    name = models.CharField(max_length=250)
+    number_book = models.IntegerField(blank=True, null=True)
 
   
 class Book(models.Model):
@@ -124,6 +123,101 @@ class Book(models.Model):
 ```py 
 from books.models import Book, Author, Category
 ```
+**Veritabanı nesnesini oluşturma**<br/>
+```pycon
+author = Author(name="Yaşar Kemal")
+author.save()
+```
+*Or*
+```pycon
+author = Author.objects.create(name="Yaşar Kemal", tagline="Yaşar Kemal....")
+```
+*create ile oluşturduktan sonra save etmemize gerek yoktur.*<br/><br/>
+**Nesnelerdeki değişiklikleri kaydetme**
+```pycon
+author.name = "Orhan Kemal"
+author.save()
+```
+***Nesneleri Çağrımak Filtrelemek***<br/>
+
+*Veri Tabanındaki Bütün Nesneleri Getirmek*<br/>
+
+```pycon
+books =  Book.objects.all() #queryset döner
+```
+*Filtreme yapmak*<br/>
+
+```pycon
+books =  Book.objects.filter(name="Demirciler Çarşısı cinayeti") #queryset döner
+```
+
+*Sadece belirli bir nesneye ihticımız varsa kullanır(Dikkatli olmakta yarar var!)*<br/>
+
+```pycon
+books =  Book.objects.get(id=1) #queryset döner
+```
+
+
+
+***ForeignKey ve ManyToManyField alanlarını kaydetme***<br/>
+**ForeignKey** *alanını kaydetmek*<br/> 
+
+
+```pycon
+from blog.models import Book, Category
+book = Book.objects.get(pk=1)
+category_roman = Category.objects.get(name="Roman")
+book.category = roman_category
+book.save()
+```
+**ManyToManyField** *alanını kaydetmek*<br/> 
+*Bir ManyToManyField'ı güncellemek biraz farklı çalışır - ilişkiye bir kayıt eklemek için sahada add() yöntemini kullanın. Bu örnek, giriş nesnesine Author örneğini camus ekler:*
+```pycon
+from blog.models import Book, Author
+camus = Author.objects.create(name="Albert Camus")
+book.author.add(camus)
+```
+
+*Bir seferde birden çok kayıt ekleme*
+
+```pycon
+camus = Author.objects.create(name="Albert Camus")
+dosto = Author.objects.create(name="dostoyevski")
+seyma = Author.objects.create(name="Şeyma Subaşı")
+book.author.add(camus, dosto, seyma)
+```
+
+## ORM Genel Sorgulamalar
+
+*Bir üstte bahsettiğimiz `get()`, `filter()` gibi metodlar bazı durumlar için tek başına yeterli olamayabir bu nedenle ihtiyacımızın olabileceği giğer sorgu çeşiltlerine bakacağız*
+
+`get_or_create()` bazı durumlarda oluşturmak istediğimiz nesneler eğer veri tabanında varsa istenmedik hatalarla karşılaşabiliriz bunu önlemek için kullanılan metod
+
+
+```pycon
+
+author, created = Author.objects.get_or_create(name="ömer", tagline="deneme")
+```
+*burada eğer varsa getirir yoksa oluşturur*<br/>
+**Başka bir yöntem iste `get_or_404()`**
+```pycon
+from django.shortcuts import get_object_or_404
+book = get_object_or_404(Book, id=1)
+```
+`exclude()` bu metod istenmeye ifadeyi hariç tutup diğerlerini döndürmek için kullanılır
+
+```pycon
+book = Book.objects.exclute(is_active=False)
+```
+
+`order_by()` bu metod nesnelerimizi sıralayarak çekmemize yarar 
+
+```pycon
+book = Book.objects.filter(is_active=True).order_by('created_date')
+```
+
+
+
 
 
 

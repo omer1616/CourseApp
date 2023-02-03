@@ -11,9 +11,9 @@ class Category(models.Model):
 
 
 class Author(models.Model):
-    first_name = models.CharField(max_length=250)
-    last_name = models.CharField(max_length=250)
-    years = models.IntegerField(blank=True, null=True)
+    name = models.CharField(max_length=250)
+    tagline = models.TextField(verbose_name="Kısa Açıklama", blank=True, null=True)
+
 
     def __str__(self):
         return self.first_name + self.last_name
