@@ -320,8 +320,18 @@ Blog.objects.filter(description_endswith="bu roman")
 ```
 
 ## Q Nesnesi
+*`Filter()` methodu içerisine yazdığımız argumanlar `And` ile birleşir `Or` kullanabilmemiz için `Q` nesnesinden yararlanırız.*
 
 
+
+```pycon
+from django.db.models import Q
+
+books = Books.objects.filter(Q(stock_count=4), | Q(is_active=True))
+products = Books.objects.filter(
+    Q(price__gte=50) & Q(stock_count__gt=0)
+)
+```
 
 
 
