@@ -15,7 +15,7 @@ class BookAdmin(admin.ModelAdmin):
 
 
     def update_activate(self, request, queryset):
-        queryset.update(is_active=False)
+        queryset.update(is_active=True)
 
     update_activate.short_description = "Seçili Nesneleri Yayına Al"  # actionun ismini düzenleme
 

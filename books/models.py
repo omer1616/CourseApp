@@ -30,7 +30,7 @@ class Book(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "kitap"
-        verbose_name_plural = "kitaplar"
+        verbose_name = "Kitap"
+        verbose_name_plural = "Kitaplar"
         # db_table = 'book_test'
-        # ordering
+        # ordering = ['created_date']

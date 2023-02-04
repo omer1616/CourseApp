@@ -333,9 +333,56 @@ products = Books.objects.filter(
 )
 ```
 
+## Django Admin 
+
+**Meta Seçenekleri**
 
 
+```py
+class Book(models.Model):
+    name = models.CharField(max_length=250)
+    author = models.ManyToManyField(Author, related_name="author")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField(max_length=500, blank=True, null=True)
+    pricice = models.FloatField()
+    created_date = models.DateTimeField(auto_now_add=True)
+    relase_date = models.DateField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name = "Kitap" # tekil isimlendirme 
+        verbose_name_plural = "Kitaplar" # Çoğul isimlendirme
+        db_table = 'book_test'# veritabanında adı 
+        ordering = ['created_date'] # sıralama
+```
+
+**Admin Özelleştirme Seçenekleri**
+
+```py
+from django.contrib import admin
+from .models import Author, Category, Book
+
+
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'created_date', 'is_active')  # listelenmek istenen fieldları göstermek icin
+    list_filter = ('is_active', 'created_date', 'category')  # filtrelemek istediğimiz alanlar için kullanılır
+    ordering = ('created_date',)  # sıralama icin kullanıkır
+    search_fields = ('name', 'category', 'created_date', 'is_active')  # arama özelliğiæß
+    list_per_page = 50  # sayfada kaç tane görünmesini istiyorsak
+    actions = ('update_activate',)  # eklemek istediğimiz fonksiyon aksiyonlarını koyarız
+
+
+    def update_activate(self, request, queryset):
+        queryset.update(is_active=False)
+
+    update_activate.short_description = "Seçili Nesneleri Yayına Al"  # actionun ismini düzenleme
+
+
+admin.site.register(Author)
+admin.site.register(Category)
+
+```
 
 
 
