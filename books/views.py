@@ -29,3 +29,11 @@ def book_detail(request, slug):
         'book': book
     }
     return render(request, 'book_detail.html', context=context)
+
+
+def get(request):
+    pass
+
+
+def post(request):
+    pass
