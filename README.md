@@ -384,16 +384,138 @@ admin.site.register(Category)
 
 ```
 
+## Django Template 
+
+**Template yolunu verme**
+
+**templates**
+
+`core/settings.py` *dizininde template klasörümüzün yolunu tanıtıyoruz* 
+
+````pycon
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR, 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+````
+**Daha sonra ana dizine gelip `templates` adında klasör oluştuyoruz**
+*oluşturduktan sonra `templates/index.html`* adında HTML dosyamızı oluşturalım
+
+**View**
+
+`books/view.py` dosyasına gidip ilgili fonksiyonumuza template html dosyamızın yolunu veriyoruz
+````pycon
+def home(request):
+    data = f"Merhaba burası home sayfası"
+
+    context = {
+        'data': data
+    }
+    return render(request, 'index.html', context=context)
+````   
 
 
+## Template Veri gönderme
+**View fonksiyonumuzu oluşturma ve verileri çekme**<br/>
+`books/view.py` dosyasında books diye bir fonksiyon oluşturduktan sonra `Book.objects.all()`
+metodumuzla tüm kitapları çekiyoruz yukarıda `context` adında bir dictionary içerinde datamızı gönderiyoruz. 
+
+```python
+from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+def books(request):
+    books = Book.objects.all()
+    x = False
+    context = {'books': books,
+               'x': x
+               }
+    return render(request, 'books.html', context=context)
+```
+
+**Url Dosyasına path'imzi tanıtma**<br/>
+`books/urls.py` dosyamız;
+```python
+from django.urls import path
+
+from . import views
 
 
-   
+urlpatterns = [
+    path('', views.books),
+    path('home/', views.home),
+    path('books/',  views.books)
+
+]
+```
+gibi olacak. <br/>
+
+
+## HTML
+**`HTML` içerisine verileri yazma**<br/>
+
+*burada veriler bize bir queryset objesi olarak geleceğinde öncelikle bir for döngüsü içerisine alıp verilere ulaşabiliriz*
+
+
+**For Kullanımı**<br/>
+
+*`HTML` içerisine yazacağımız for döngüsü python kod bloğudur ama kullanımı biraz farklıdır.*
+
+```html
+{% for book in books %}
+        <tr>
+            <td>{{ book.name }}</td>
+            <td>{{ book.category.name }}</td>
+        </tr>
+{% endfor %}
+```
+
+
+**ManyToMany için For Kullanımı**<br/><br/>
+*burada bize bir `ManyToMany` ilişkisi döneceğinde yani bir kitabın birden fazla yazarı olabilir bu da demek oluyor ki birden fazla queryset objesi dönecek bunları almak için ayrıca tekrardan bir `for içerisinde` bütün yazarları çekmemiz gerekecek*
+
+```html
+ {% for book in books %}
+        <tr>
+            <td>{{ book.name }}</td>
+            <td>{{ book.category.name }}</td>
+            {% for authour in book.author.all %}
+            <td> {{ authour.first_name }} </td>
+                {%endfor%}
+        </tr>
+{% endfor %}
+```
         
         
-        
+**If Kullanımı**<br/>
+
+```html
+  {% for book in books %}
+        <tr>
+            {% if book.name  != "Demirciler Çarşısı Cinayeti" %}
+            <td>{{ book.name }}</td>
+            <td>{{ book.category.name }}</td>
+            {% for authour in book.author.all %}
+            <td> {{ authour.first_name }} </td>
+                {%endfor%}
+          {% endif %}
+            
+        </tr>
+{% endfor %}
+```
 
 
+## Book detay sayfası
 
 
 
