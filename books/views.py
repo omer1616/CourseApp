@@ -21,3 +21,11 @@ def books(request):
                'x': x
                }
     return render(request, 'books.html', context=context)
+
+
+def book_detail(request, id):
+    book = Book.objects.get(id=id)
+    context = {
+        'book': book
+    }
+    return render(request, 'book_detail.html', context=context)

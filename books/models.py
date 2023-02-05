@@ -1,6 +1,5 @@
 from django.db import models
-
-
+from django.utils.text import slugify
 # Create your models here.
 
 class Category(models.Model):
@@ -20,6 +19,7 @@ class Author(models.Model):
 
 
 class Book(models.Model):
+    slug = models.SlugField(max_length=300,)
     name = models.CharField(max_length=250)
     author = models.ManyToManyField(Author, related_name="author")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -34,3 +34,6 @@ class Book(models.Model):
         verbose_name_plural = "Kitaplar"
         # db_table = 'book_test'
         # ordering = ['created_date']
+
+
+

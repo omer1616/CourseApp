@@ -517,8 +517,61 @@ gibi olacak. <br/>
 
 ## Book detay sayfası
 
+*Detay sayfası o url'e gidildiğinde hangi ürün ise o ürüne ait özelliklerin sayfalandığı sayfalar*<br/>
+
+**View**<br/>
+*Burada fark edildiği üzere book_detail fonksiyonu request parametresinin yanına ayrı bir id parametresi aldı bunun nedeni biz objemizi çektiğimizde istek attığımız url'den gelen id nese gidip o id'li ürünü çekip önümüze çıkarması için*
+````python
+def book_detail(request, id):
+    book = Book.objects.get(id=id)
+    context = {
+        'book': book
+    }
+    return render(request, 'book_detail.html', context=context)
+````
 
 
+**Url**
 
-
+*detail sayfasını oluşturmak için ilgili url'e bir `/`' sonra bir `id` geleceğini bildirmek için bir parametre daha ekiyor ve ilgili fonksiyonumuzu çağırıyoruz*
  
+````python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.books),
+    path('home/', views.home),
+    path('books/',  views.books),
+    path('books/<int:id>', views.book_detail,  name="book_detail"), # name paramatresi html sayfalarında ilgili url'in pathini vermek için işimize yarayan kullanışlı bir parametre
+]
+````
+
+**HTML**<br/>
+
+*html sayfamızı templates klasörünün içerisinde oluşturalım `book_detail.html`* ardından sayfayı açtıktan sonra `book_detail` fonksiyonumuzdan gelen datayı çekebiliriz
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{{ book.name }}
+</body>
+</html>
+````
+*yukarıda fark ettiyseniz bir for dönmemize gerek kalmadı çünkü bir `queryset değil` `get` kullanarak tek bir obje çektik*<br/>
+
+
+*son olarak `books.html` sayfasında ilgili url'i döndürecek 'href`'i verelim*
+
+````html
+     <td><a href="{% url 'book_detail'  book.id %}"> {{ book.name }}</a></td>
+````
+
+## Slug Oluşturma
+
+*Slug, URL'leri daha anlamlı ve okunabilir hale getirmek için kullanılan bir veri tipidir.*
+
