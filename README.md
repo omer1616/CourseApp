@@ -573,5 +573,52 @@ urlpatterns = [
 
 ## Slug Oluşturma
 
-*Slug, URL'leri daha anlamlı ve okunabilir hale getirmek için kullanılan bir veri tipidir.*
+*Slug, URL'leri daha anlamlı ve okunabilir hale getirmek için kullanılan bir veri tipidir.*<br/>
+`books/models.py` sayfasına gidip save fonksiyonumuzu yazalım
 
+```python
+import random
+import string
+from django.db import models
+from django.template.defaultfilters import slugify
+
+
+    def save(self):
+        letters = string.ascii_lowercase
+        random_letters = ''.join(random.choice(letters) for i in range(10))
+        self.slug = slugify(self.name + '' + random_letters)
+        super(Book, self).save(self)
+```
+**`get_absolute_url()`** kullanımı
+
+``books/models.py`` dosyasına gidip alttaki fonksiyonu yazabiliriz <br/>
+
+````python
+def get_absolute_url(self):
+   # return f"books/{self.slug}"
+   return reverse('book_detail',  kwargs={'slug': self.slug})
+````
+ardından `templates/books.html` sayfasında ilgili fonksiyonumuzu çağırıyoruz
+
+````html
+        <tr>
+{#            {% if book.name  != "Demirciler Çarşısı Cinayeti" %}#}
+{#             {% url 'book_detail'  book.slug %}#}
+            <td><a href="{{ book.get_absolute_url }}"> {{ book.slug }}</a></td>
+            <td>{{ book.category.name }}</td>
+            {% for authour in book.author.all %}
+            <td> {{ authour.first_name }} </td>
+
+                {%endfor%}
+{#          {% endif %}#}
+        </tr>
+
+````
+
+*bu şekilde url'lerimizi daha dinamiz kullanabiliriz.*
+
+
+## Django Formlar
+
+
+**GET isteği**

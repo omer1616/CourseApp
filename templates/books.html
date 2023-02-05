@@ -15,24 +15,24 @@
         </tr>
     </thead>
     <tbody>
+
     {% for book in books %}
         <tr>
-            {% if book.name  != "Demirciler Çarşısı Cinayeti" %}
-            <td><a href="{% url 'book_detail'  book.id %}"> {{ book.name }}</a></td>
+{#            {% if book.name  != "Demirciler Çarşısı Cinayeti" %}#}
+{#             {% url 'book_detail'  book.slug %}#}
+            <td><a href="{{ book.get_absolute_url }}"> {{ book.slug }}</a></td>
             <td>{{ book.category.name }}</td>
             {% for authour in book.author.all %}
             <td> {{ authour.first_name }} </td>
 
                 {%endfor%}
-          {% endif %}
+{#          {% endif %}#}
 
 
         </tr>
             {% endfor %}
     </tbody>
 </table>
-<div>
-    sdfdf
-</div>
+
 </body>
 </html>

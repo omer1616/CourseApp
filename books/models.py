@@ -1,6 +1,7 @@
 import random
 import string
 from django.db import models
+from django.urls import reverse
 from django.template.defaultfilters import slugify
 
 
@@ -41,5 +42,9 @@ class Book(models.Model):
     def save(self):
         letters = string.ascii_lowercase
         random_letters = ''.join(random.choice(letters) for i in range(10))
-        self.slug = slugify(self.name + '' + random_letters)
+        self.slug = slugify(self.name + '-' + random_letters)
         super(Book, self).save(self)
+
+    def get_absolute_url(self):
+        # return f"books/{self.slug}"
+        return reverse('book_detail',  kwargs={'slug': self.slug})
