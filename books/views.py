@@ -32,8 +32,12 @@ def book_detail(request, slug):
 
 
 def get(request):
-    pass
+    name = request.GET.get('name')
+    print(name)
+    tagline = request.GET.get('tagline')
+    print(tagline)
+    return render(request, 'get.html')
 
 
 def post(request):
-    pass
+    return render(request, 'post.html')
