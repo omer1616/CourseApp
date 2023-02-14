@@ -12,7 +12,7 @@ def home(request):
     context = {
         'data': data
     }
-    return render(request, 'index.html', context=context)
+    return render(request, 'base.html', context=context)
 
 
 def books(request):
@@ -21,7 +21,7 @@ def books(request):
     context = {'books': books,
                'x': x
                }
-    return render(request, 'books.html', context=context)
+    return render(request, 'book/books.html', context=context)
 
 
 def book_detail(request, slug):
@@ -29,7 +29,7 @@ def book_detail(request, slug):
     context = {
         'book': book
     }
-    return render(request, 'book_detail.html', context=context)
+    return render(request, 'book/book_detail.html', context=context)
 
 
 def get(request):
@@ -43,7 +43,7 @@ def get(request):
             'tagline': tagline
         }
 
-    return render(request, 'get.html', context=context)
+    return render(request, 'book/get.html', context=context)
 
 
 def post(request):
@@ -54,9 +54,9 @@ def post(request):
         context = {
             'name': name
         }
-        return render(request, 'post.html', context=context)
+        return render(request, 'book/post.html', context=context)
 
-    return render(request, 'post.html')
+    return render(request, 'book/post.html')
 
 
 def create_book(request):
@@ -71,7 +71,7 @@ def create_book(request):
         'form': form
     }
 
-    return render(request, 'form.html', context=context)
+    return render(request, 'book/form.html', context=context)
 
 
 def update_book(request, slug):
@@ -85,7 +85,7 @@ def update_book(request, slug):
         'form': form
     }
 
-    return render(request, 'book_update.html', context=context)
+    return render(request, 'book/book_update.html', context=context)
 
 
 def remove_book(request, slug):
