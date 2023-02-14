@@ -43,8 +43,9 @@ class Book(models.Model):
         letters = string.ascii_lowercase
         random_letters = ''.join(random.choice(letters) for i in range(10))
         self.slug = slugify(self.name + '-' + random_letters)
-        super(Book, self).save(self)
+
+        super(Book, self).save()
 
     def get_absolute_url(self):
         # return f"books/{self.slug}"
-        return reverse('book_detail',  kwargs={'slug': self.slug})
+        return reverse('book_detail', kwargs={'slug': self.slug})

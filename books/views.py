@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from .form import BookForm
 # Create your views here.
 from .models import Book, Author
+from django.contrib import messages
 
 
 def home(request):
@@ -60,9 +61,12 @@ def post(request):
 
 def create_book(request):
     form = BookForm(request.POST or None)
+
     if request.method == "POST":
         if form.is_valid():
             form.save()
+            messages.success(request, 'başarıyla oluşturuldu')
+            return redirect('books')
     context = {
         'form': form
     }
@@ -70,5 +74,22 @@ def create_book(request):
     return render(request, 'form.html', context=context)
 
 
-def post_update(request):
-    pass
+def update_book(request, slug):
+    book = get_object_or_404(Book, slug=slug)
+    print(book)
+    form = BookForm(request.POST or None, instance=book)
+    if form.is_valid():
+        book.save()
+    print(form)
+    context = {
+        'form': form
+    }
+
+    return render(request, 'book_update.html', context=context)
+
+
+def remove_book(request, slug):
+    book = get_object_or_404(Book, slug=slug)
+    book.delete()
+
+    return redirect('books')
