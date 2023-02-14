@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-
+from .form import BookForm
 # Create your views here.
 from .models import Book, Author
 
@@ -32,12 +32,43 @@ def book_detail(request, slug):
 
 
 def get(request):
-    name = request.GET.get('name')
-    print(name)
-    tagline = request.GET.get('tagline')
-    print(tagline)
-    return render(request, 'get.html')
+    if request.method == "GET":
+        name = request.GET.get('name')
+        print(name)
+        tagline = request.GET.get('tagline')
+        print(tagline)
+        context = {
+            'name': name,
+            'tagline': tagline
+        }
+
+    return render(request, 'get.html', context=context)
 
 
 def post(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+
+        print(name)
+        context = {
+            'name': name
+        }
+        return render(request, 'post.html', context=context)
+
     return render(request, 'post.html')
+
+
+def create_book(request):
+    form = BookForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+    context = {
+        'form': form
+    }
+
+    return render(request, 'form.html', context=context)
+
+
+def post_update(request):
+    pass

@@ -5,6 +5,18 @@
     <title>Title</title>
 </head>
 <body>
+<form method="POST">
+    {% csrf_token %}
+    <label>Name</label>
+    <input name="name">
+    <label>Active</label>
+    <input type="radio" id="vehicle3" name="active">
 
+    <button type="submit">gönder</button>
+
+</form>
+<h1>
+    {{ name }}
+</h1>
 </body>
 </html>

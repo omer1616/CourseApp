@@ -10,4 +10,5 @@ urlpatterns = [
     path('books/<slug>', views.book_detail,  name="book_detail"),
     path('get', views.get,  name="get"),
     path('post', views.post,  name="post"),
+    path('create-book', views.create_book,  name="create_book"),
 ]
