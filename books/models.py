@@ -25,6 +25,7 @@ class Author(models.Model):
 class Book(models.Model):
     name = models.CharField(max_length=250)
     slug = models.SlugField(max_length=300, editable=False)
+    image = models.ImageField(upload_to="book", verbose_name="Kapak Fotoğrafı", blank=True, null=True)
     author = models.ManyToManyField(Author, related_name="author")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField(max_length=500, blank=True, null=True)

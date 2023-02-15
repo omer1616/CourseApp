@@ -60,13 +60,13 @@ def post(request):
 
 
 def create_book(request):
-    form = BookForm(request.POST or None)
+    form = BookForm(request.POST, request.FILES)
+    if form.is_valid():
+        print("***"*10)
+        form.save()
+        messages.success(request, 'başarıyla oluşturuldu')
+        return redirect('create_book')
 
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'başarıyla oluşturuldu')
-            return redirect('books')
     context = {
         'form': form
     }

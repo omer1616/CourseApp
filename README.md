@@ -862,6 +862,177 @@ path('books/<slug>/update', views.update_book, name="update_book"),
 path('books/<slug>/remove', views.remove_book, name="remove_book"),
 ````
 
+## Static Dosyalar
+
+`static/index.css` dosyası oluşturuyorum
+
+````css
+body {
+    background-color: red;
+}
+
+th {
+    background: aqua;
+}
+````
+
+`core/settings.py` dosyasında static ayarlarımı yapıyorum
+
+
+````python
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+```` 
+**Ayarları yaptıntan sonra  ``HTML` sayfamızda ilgili static dosyaları cagırıyoruz**
+
+````html
+{%  load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+<form style="justify-content: right", method="GET">
+    <label >isim</label>
+    <input name="name">
+     <label >açıklama</label>
+    <input name="tagline">
+    <button type="submit">kaydet</button>
+
+    <h1>{{ name }}</h1>
+    <h1>{{ tagline }}</h1>
+</form>
+</body>
+</html>
+````
+
+
+
+## HTML Dosyaları 
+
+*base mantığı inculude, extend, content*<br/>
+
+## Crispy Form
+
+```pycon
+pip install django-crispy-forms
+pip install crispy-bootstrap5 
+```
+
+
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    'user',
+    'books',
+    'get_post',
+    'crispy_forms',
+    'crispy_bootstrap5',
+]
+```
+````html
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<form action="#" method="POST" enctype="multipart/form-data">
+ {% csrf_token %}
+  <div class="form-group">
+
+  {{ form|crispy }}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+````
+
+## Upload Image
+```pycon
+pip install Pillow
+```
+`books/models.py`
+```python
+class Book(models.Model):
+    name = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=300, editable=False)
+    image = models.ImageField(upload_to="book", verbose_name="Kapak Fotoğrafı", blank=True, null=True)
+```
+
+`core/settings.py`
+
+```python
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+```
+
+`core/ulrs.py`
+
+```python
+
+from django.contrib import admin
+from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('books.urls')),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+`view.py`
+```python
+def create_book(request):
+    form = BookForm(request.POST, request.FILES)
+    if form.is_valid():
+        print("***"*10)
+        form.save()
+        messages.success(request, 'başarıyla oluşturuldu')
+        return redirect('create_book')
+
+    context = {
+        'form': form
+    }
+
+```
+``form.html``
+```html
+
+<form action="#" method="POST" enctype="multipart/form-data">
+ {% csrf_token %}
+  <div class="form-group">
+
+  {{ form|crispy }}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+```
+
+
+
+
+
+
+
 
 
 
