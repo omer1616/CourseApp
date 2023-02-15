@@ -622,3 +622,246 @@ ardından `templates/books.html` sayfasında ilgili fonksiyonumuzu çağırıyor
 
 
 **GET isteği**
+
+`view.py`
+
+````python
+def get(request):
+    if request.method == "GET":
+        name = request.GET.get('name')
+        print(name)
+        tagline = request.GET.get('tagline')
+        print(tagline)
+        context = {
+            'name': name,
+            'tagline': tagline
+        }
+
+    return render(request, 'book/get.html', context=context)
+````
+
+`urls.py`
+
+````python
+path('get', views.get,  name="get"),
+````
+
+
+`get.html`
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form style="justify-content: right", method="GET">
+    <label >isim</label>
+    <input name="name">
+     <label >açıklama</label>
+    <input name="tagline">
+    <button type="submit">kaydet</button>
+
+    <h1>{{ name }}</h1>
+    <h1>{{ tagline }}</h1>
+</form>
+</body>
+</html>
+
+````
+
+**POST isteği**
+
+`view.py`
+
+````python
+def post(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+
+        print(name)
+        context = {
+            'name': name
+        }
+        return render(request, 'book/post.html', context=context)
+
+    return render(request, 'book/post.html')
+````
+
+`urls.py`
+
+````python
+path('get', views.get,  name="get"),
+path('post', views.post,  name="post"),
+````
+
+
+`post.html`
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+    {% csrf_token %}
+    <label>Name</label>
+    <input name="name">
+    <label>Active</label>
+    <input type="radio" id="vehicle3" name="active">
+
+    <button type="submit">gönder</button>
+
+</form>
+</body>
+</html>
+````
+**FORM ile oluşturma**
+
+`form.py`
+
+````python
+from django.forms import ModelForm
+from .models import Book, Author, Category
+
+
+class BookForm(ModelForm):
+    class Meta:
+        model = Book
+        fields = ['name', 'description', 'author', 'category', 'pricice']
+
+````
+`views.py`
+````python
+def create_book(request):
+    form = BookForm(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'başarıyla oluşturuldu')
+            return redirect('books')
+    context = {
+        'form': form
+    }
+
+    return render(request, 'book/form.html', context=context)
+
+````
+
+`urls.py`
+
+````python
+path('create-book', views.create_book,  name="create_book"),
+````
+
+
+`post.html`
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+     {% csrf_token %}
+
+    {{ form.as_p }}
+    <button type="submit">Ekle</button>
+</form>
+</body>
+</html>
+````
+**FORM ile güncelleme**
+
+`form.py`
+
+````python
+from django.forms import ModelForm
+from .models import Book, Author, Category
+
+
+class BookForm(ModelForm):
+    class Meta:
+        model = Book
+        fields = ['name', 'description', 'author', 'category', 'pricice']
+
+````
+`views.py`
+````python
+def update_book(request, slug):
+    book = get_object_or_404(Book, slug=slug)
+    print(book)
+    form = BookForm(request.POST or None, instance=book)
+    if form.is_valid():
+        book.save()
+    print(form)
+    context = {
+        'form': form
+    }
+
+    return render(request, 'book/book_update.html', context=context)
+
+````
+
+`urls.py`
+
+````python
+path('create-book', views.create_book,  name="create_book"),
+path('books/<slug>/update', views.update_book, name="update_book"),
+````
+
+
+`post.html`
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+     {% csrf_token %}
+
+    {{ form.as_p }}
+    <button type="submit">Ekle</button>
+</form>
+</body>
+</html>
+````
+
+
+**Silme**
+
+
+`views.py`
+````python
+def remove_book(request, slug):
+    book = get_object_or_404(Book, slug=slug)
+    book.delete()
+
+    return redirect('books')
+
+````
+
+`urls.py`
+
+````python
+path('create-book', views.create_book,  name="create_book"),
+path('books/<slug>/update', views.update_book, name="update_book"),
+path('books/<slug>/remove', views.remove_book, name="remove_book"),
+````
+
+
+
+
