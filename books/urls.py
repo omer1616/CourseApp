@@ -13,4 +13,5 @@ urlpatterns = [
     path('create-book', views.create_book,  name="create_book"),
     path('books/<slug>/update', views.update_book, name="update_book"),
     path('books/<slug>/remove', views.remove_book, name="remove_book"),
+    path('create-comment', views.create_comment, name="comment"),
 ]

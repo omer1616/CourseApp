@@ -1,8 +1,10 @@
 import random
 import string
 from django.db import models
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.template.defaultfilters import slugify
+from ckeditor.fields import RichTextField
 
 
 # Create your models here.
@@ -41,13 +43,34 @@ class Book(models.Model):
         # ordering = ['created_date']
 
     def save(self):
-
         letters = string.ascii_lowercase
         random_letters = ''.join(random.choice(letters) for i in range(10))
         self.slug = slugify(self.name + '-' + random_letters)
 
         super(Book, self).save()
 
+
+    def __str__(self):
+        return self.name
+
     def get_absolute_url(self):
         # return f"books/{self.slug}"
         return reverse('book_detail', kwargs={'slug': self.slug})
+
+
+EVALUATİON = (
+    ('1', 'Kötü'),
+    ('2', 'Eh İşte'),
+    ('3', 'İdare Eder'),
+    ('4', 'İyi'),
+    ('5', 'Çok iyi'),
+
+)
+class Comment(models.Model):
+    user = models.ForeignKey(User, verbose_name="Kullanıcı", on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, verbose_name="Kitap", on_delete=models.CASCADE)
+    comment = RichTextField()
+    evulation = models.CharField(max_length=25, choices=EVALUATİON,  default=5)
+
+    def __str__(self):
+        return f" {self.book} - {self.user} - {self.comment}"

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from .form import BookForm
+from .form import BookForm, CommentForm
 # Create your views here.
 from .models import Book, Author
 from django.contrib import messages
@@ -62,7 +62,7 @@ def post(request):
 def create_book(request):
     form = BookForm(request.POST, request.FILES)
     if form.is_valid():
-        print("***"*10)
+        print("***" * 10)
         form.save()
         messages.success(request, 'başarıyla oluşturuldu')
         return redirect('create_book')
@@ -93,3 +93,14 @@ def remove_book(request, slug):
     book.delete()
 
     return redirect('books')
+
+
+def create_comment(request):
+
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+
+          form.save()
+          print("kaydedildi")
+
+    return render(request, 'book/comment.html', context={'form': form})

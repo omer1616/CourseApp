@@ -1026,6 +1026,86 @@ def create_book(request):
 
 {% endblock %}
 ```
+## Ckeditor
+`models.py`
+````python
+class Comment(models.Model):
+    user = models.ForeignKey(User, verbose_name="Kullanıcı", on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, verbose_name="Kitap", on_delete=models.CASCADE)
+    comment = RichTextField()
+
+    def __str__(self):
+        return f" {self.book} - {self.user} - {self.comment}"
+````
+
+`forms.py`
+```python
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = "__all__"
+
+```
+`views.py`
+```python
+def create_comment(request):
+    form = CommentForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+
+    return render(request, 'book/comment.html', context={'form': form})
+
+```
+
+`urls.py`
+```python
+path('create-comment', views.create_comment, name="comment"),
+
+```
+`comment.html`
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">gönder</button>
+
+</form>
+
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+</body>
+</html>
+
+```
+
+
+
+`pip install django-ckeditor`
+
+`core/settings.py`
+````python
+
+INSTALLED_APPS = [
+   ...
+    'ckeditor',
+
+]
+STATIC_ROOT = 'staticfiles/'
+````
+````pycon
+python manage.py collectstatic
+````
+
+
 
 
 
