@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect ,reverse
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from .form import BookForm, CommentForm
 # Create your views here.
 from .models import Book, Author
 from django.contrib import messages
-
+from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
     data = f"Merhaba burası home sayfası"
@@ -87,12 +87,13 @@ def update_book(request, slug):
 
     return render(request, 'book/book_update.html', context=context)
 
-
-def remove_book(request, slug):
-    book = get_object_or_404(Book, slug=slug)
+@csrf_exempt
+def remove_book(request, id):
+    book = get_object_or_404(Book, id=id)
     book.delete()
 
-    return redirect('books')
+    return JsonResponse({'status': True})
+
 
 
 def create_comment(request):
