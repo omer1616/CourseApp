@@ -35,7 +35,7 @@
 
         $.ajax({
             url: `{books/${bookId}/remove}`,
-            type: 'DELETE',
+            meth: 'DELETE',
 
             success: function(response) {
                 console.log('Kitap silindi.');
