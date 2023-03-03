@@ -215,10 +215,19 @@ book = Book.objects.exclute(is_active=False)
 ```pycon
 book = Book.objects.filter(is_active=True).order_by('created_date')
 ```
+`reverse()` Sorgu kümesi öğelerinin döndürülme sırasını tersine çevirmek için yöntemi kullanılır 
+
+```pycon
+books = Book.objects.filter(is_active=True)
+books.reverse()[:4]
+```
+
+
 `values()` bu metod nesnelerimizi sözlüğe dönüştürmemizi sağlar 
 
 ```pycon
 category =  Category.objects.filter(name="Roman").values()
+book = Book.objects.all()[1:3].values('id','name')
 category
 <QuerySet [{'id': 1, 'name': 'Roman'}]>
 
