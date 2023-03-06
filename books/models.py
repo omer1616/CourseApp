@@ -42,12 +42,12 @@ class Book(models.Model):
         # db_table = 'book_test'
         # ordering = ['created_date']
 
-    def save(self):
-        letters = string.ascii_lowercase
-        random_letters = ''.join(random.choice(letters) for i in range(10))
-        self.slug = slugify(self.name + '-' + random_letters)
-
-        super(Book, self).save()
+    # def save(self):
+    #     letters = string.ascii_lowercase
+    #     random_letters = ''.join(random.choice(letters) for i in range(10))
+    #     self.slug = slugify(self.name + '-' + random_letters)
+    #
+    #     super(Book, self).save()
 
 
     def __str__(self):
