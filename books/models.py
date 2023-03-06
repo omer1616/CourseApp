@@ -28,7 +28,7 @@ class Book(models.Model):
     name = models.CharField(max_length=250)
     slug = models.SlugField(max_length=300, editable=False)
     image = models.ImageField(upload_to="book", verbose_name="Kapak Fotoğrafı", blank=True, null=True)
-    author = models.ManyToManyField(Author, related_name="aouthor_books")
+    author = models.ManyToManyField(Author, related_name="author_books")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="category_books")
     description = models.TextField(max_length=500, blank=True, null=True)
     pricice = models.FloatField()
