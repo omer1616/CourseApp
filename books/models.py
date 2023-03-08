@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.template.defaultfilters import slugify
 from ckeditor.fields import RichTextField
-
+import itertools
 
 # Create your models here.
 
@@ -41,6 +41,15 @@ class Book(models.Model):
         verbose_name_plural = "Kitaplar"
         # db_table = 'book_test'
         # ordering = ['created_date']
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.slug = slugify(self.name)
+            for x in itertools.count(1):
+                if not Book.objects.filter(slug=self.slug).exists():
+                    break
+                self.slug = slugify(self.name + '-' + str(x))
+        super().save(*args, **kwargs)
 
     # def save(self):
     #     letters = string.ascii_lowercase

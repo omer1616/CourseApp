@@ -592,11 +592,14 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
-    def save(self):
-        letters = string.ascii_lowercase
-        random_letters = ''.join(random.choice(letters) for i in range(10))
-        self.slug = slugify(self.name + '' + random_letters)
-        super(Book, self).save(self)
+     def save(self, *args, **kwargs):
+        if not self.pk:
+            self.slug = slugify(self.name)
+            for x in itertools.count(1):
+                if not Book.objects.filter(slug=self.slug).exists():
+                    break
+                self.slug = slugify(self.name + '-' + str(x))
+        super().save(*args, **kwargs)
 ```
 **`get_absolute_url()`** kullanımı
 
