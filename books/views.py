@@ -105,3 +105,9 @@ def create_comment(request):
           print("kaydedildi")
 
     return render(request, 'book/comment.html', context={'form': form})
+
+
+
+
+def new_func(request):
+    pass
