@@ -25,8 +25,8 @@ class Project(models.Model):
 
     @property
     def total_transactions(self):
-        expense_list = Expense.objects.filter(project=self)
-        return len(expense_list)
+        expense_list = Expense.objects.filter(project=self).count()
+        return expense_list
 
     def get_absolute_url(self):
         return '/' + self.slug

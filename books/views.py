@@ -107,4 +107,13 @@ def create_comment(request):
     return render(request, 'book/comment.html', context={'form': form})
 
 
-##fgjdfsgkljsdfkmjdslkfmjsdk
+def search(request):
+    from django.db.models import Q
+    if request.method == "GET":
+        searched = request.GET.get('search')
+        print(searched)
+        books = Book.objects.filter(
+            Q(name__icontains=searched) | Q(category__name__iontains=searched) | Q(pricice__icontains=searched))
+
+        return render(request, "search.html", {'searched': searched,
+                                                    'books': books})
