@@ -110,10 +110,12 @@ def create_comment(request):
 def search(request):
     from django.db.models import Q
     if request.method == "GET":
-        searched = request.GET.get('search')
-        print(searched)
-        books = Book.objects.filter(
-            Q(name__icontains=searched) | Q(category__name__iontains=searched) | Q(pricice__icontains=searched))
+        searched = request.GET['search']
 
-        return render(request, "search.html", {'searched': searched,
-                                                    'books': books})
+        print("**"*25)
+        books = Book.objects.filter(
+            Q(name__icontains=searched) | Q(category__name__icontains=searched) | Q(pricice__icontains=searched))
+        context = {'searched': searched,
+                    'books': books}
+
+        return render(request, "book/search.html", context=context)
