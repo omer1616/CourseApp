@@ -19,6 +19,7 @@
             <th >{{ book.name }}</th>
             <td>{{ book.description }}</td>
             <td>{{ book.category }}</td>
+            <td><button data-book-id="{{ book.id }}" onclick="deleteBook({{ book.id }})">Kitabı Sil</button></td>
               {% for author in book.author.all %}
             <td>{{ author }}</td>
                   {% endfor %}
@@ -27,5 +28,25 @@
         </tbody>
 
       </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    var bookId = $(this).data('book-id');
+    var  deleteBook = function (bookId){
+
+        $.ajax({
+            url: `{books/${bookId}/remove}`,
+            meth: 'DELETE',
+
+            success: function(response) {
+                console.log('Kitap silindi.');
+                location.reload();
+            },
+            error: function(error) {
+                console.log('Bir hata oluştu:', error);
+            }
+        });
+    }
+
+    </script>
 {% endblock %}
 

@@ -1,0 +1,2 @@
+def a(z):
+  pass

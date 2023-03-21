@@ -215,10 +215,19 @@ book = Book.objects.exclute(is_active=False)
 ```pycon
 book = Book.objects.filter(is_active=True).order_by('created_date')
 ```
+`reverse()` Sorgu kümesi öğelerinin döndürülme sırasını tersine çevirmek için yöntemi kullanılır 
+
+```pycon
+books = Book.objects.filter(is_active=True)
+books.reverse()[:4]
+```
+
+
 `values()` bu metod nesnelerimizi sözlüğe dönüştürmemizi sağlar 
 
 ```pycon
 category =  Category.objects.filter(name="Roman").values()
+book = Book.objects.all()[1:3].values('id','name')
 category
 <QuerySet [{'id': 1, 'name': 'Roman'}]>
 
@@ -583,11 +592,14 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 
-    def save(self):
-        letters = string.ascii_lowercase
-        random_letters = ''.join(random.choice(letters) for i in range(10))
-        self.slug = slugify(self.name + '' + random_letters)
-        super(Book, self).save(self)
+     def save(self, *args, **kwargs):
+        if not self.pk:
+            self.slug = slugify(self.name)
+            for x in itertools.count(1):
+                if not Book.objects.filter(slug=self.slug).exists():
+                    break
+                self.slug = slugify(self.name + '-' + str(x))
+        super().save(*args, **kwargs)
 ```
 **`get_absolute_url()`** kullanımı
 
